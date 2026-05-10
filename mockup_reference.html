@@ -1,0 +1,711 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --cranberry: #d41367;
+    --cranberry-tint: #fce7ef;
+    --cranberry-wash: #fdf3f7;
+    --ink-1000: #0e0a14;
+    --ink-700: #3d3445;
+    --ink-600: #5a505f;
+    --ink-500: #7a7280;
+    --ink-400: #9c95a3;
+    --ink-200: #e3dfe6;
+    --ink-100: #f1eef3;
+    --ink-50: #f7f5f8;
+    --ink-25: #fbfafc;
+    --paper: #ffffff;
+    --blue: #1a6fa8;
+    --blue-tint: #e8f4fd;
+    --blue-border: #b8d8f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .phone { background: var(--ink-100); border-radius: 24px; padding: 8px; max-width: 360px; margin: 0 auto; border: 1.5px solid var(--ink-200); }
+  .screen { background: var(--paper); border-radius: 18px; overflow: hidden; height: 720px; display: flex; flex-direction: column; position: relative; }
+
+  .header { background: rgba(255,255,255,0.97); border-bottom: 1px solid var(--ink-100); padding: 13px 18px 11px; flex-shrink: 0; }
+  .header-top { display: flex; align-items: center; gap: 10px; }
+  .logo-circle { width: 30px; height: 30px; border-radius: 50%; background: var(--cranberry); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo-circle span { color: white; font-size: 10px; font-weight: 800; }
+  .brand-title { font-size: 13px; font-weight: 700; color: var(--ink-1000); letter-spacing: -0.02em; line-height: 1.1; }
+  .brand-sub { font-size: 9px; font-weight: 600; color: var(--ink-500); letter-spacing: 0.18em; text-transform: uppercase; }
+
+  .tabs-wrap { border-bottom: 1px solid var(--ink-100); background: var(--paper); flex-shrink: 0; }
+  .tabs { display: flex; }
+  .tab { flex: 1; padding: 10px 4px; font-size: 10px; font-weight: 700; color: var(--ink-400); text-align: center; cursor: pointer; border-bottom: 2px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: all 140ms; }
+  .tab.active { color: var(--cranberry); border-bottom-color: var(--cranberry); }
+  .tab i { font-size: 16px; }
+
+  .content { flex: 1; overflow-y: auto; background: var(--ink-25); display: none; }
+  .content.active { display: block; }
+
+  /* HERO */
+  .hero { background: var(--paper); padding: 18px 18px 16px; border-bottom: 1px solid var(--ink-100); }
+  .hero-eyebrow { font-size: 9px; font-weight: 800; color: var(--cranberry); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 4px; }
+  .hero-title { font-size: 26px; font-weight: 800; color: var(--ink-1000); letter-spacing: -0.03em; line-height: 1.0; margin-bottom: 4px; }
+  .hero-title em { color: var(--cranberry); font-style: normal; }
+  .hero-sub { font-size: 12px; color: var(--ink-600); line-height: 1.5; margin-bottom: 14px; }
+  .stats-row { display: flex; gap: 8px; }
+  .stat-pill { flex: 1; background: var(--ink-25); border-radius: 10px; padding: 8px 10px; border: 1px solid var(--ink-100); }
+  .stat-val { font-size: 18px; font-weight: 700; color: var(--cranberry); letter-spacing: -0.03em; line-height: 1; }
+  .stat-lbl { font-size: 9px; font-weight: 500; color: var(--ink-600); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+
+  /* AVISOS */
+  .avisos-section { padding: 16px 16px 4px; }
+  .section-label { font-size: 10px; font-weight: 800; color: var(--ink-500); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
+
+  .carousel-wrap { margin-bottom: 4px; }
+  .carousel-img-track-wrap { border-radius: 14px; overflow: hidden; position: relative; background: var(--ink-200); cursor: pointer; }
+  .carousel-track { display: flex; transition: transform 500ms cubic-bezier(.22,.61,.36,1); }
+  .carousel-slide { min-width: 100%; aspect-ratio: 16/9; }
+  .slide-bg-1 { background: linear-gradient(135deg, #d41367 0%, #3d3445 100%); }
+  .slide-bg-2 { background: linear-gradient(135deg, #1a6fa8 0%, #d41367 100%); }
+  .slide-bg-3 { background: linear-gradient(135deg, #2a7a35 0%, #1a6fa8 100%); }
+  .slide-tap-hint { position: absolute; top: 8px; right: 8px; background: rgba(14,10,20,0.45); border-radius: 999px; padding: 3px 9px; font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .carousel-below { padding: 10px 2px 6px; }
+  .carousel-info { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .carousel-text .c-title { font-size: 14px; font-weight: 700; color: var(--ink-1000); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 2px; }
+  .carousel-text .c-date { font-size: 11px; color: var(--ink-500); font-weight: 500; }
+  .carousel-dots { display: flex; gap: 4px; align-items: center; padding-top: 3px; flex-shrink: 0; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink-200); transition: all 300ms; }
+  .dot.active { width: 18px; background: var(--cranberry); }
+
+  .section-label-sm { font-size: 10px; font-weight: 800; color: var(--ink-500); letter-spacing: 0.2em; text-transform: uppercase; margin: 8px 0 8px; }
+  .reminder-card { background: var(--paper); border-radius: 10px; border: 1px solid var(--ink-100); border-left: 3px solid var(--cranberry); padding: 10px 12px; margin-bottom: 8px; }
+  .reminder-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
+  .reminder-badge { font-size: 9px; font-weight: 800; color: var(--cranberry); letter-spacing: 0.15em; text-transform: uppercase; }
+  .reminder-date { font-size: 10px; color: var(--ink-400); font-weight: 500; }
+  .reminder-title { font-size: 13px; font-weight: 700; color: var(--ink-1000); letter-spacing: -0.01em; margin-bottom: 2px; }
+  .reminder-text { font-size: 11px; color: var(--ink-600); line-height: 1.5; }
+
+  /* AGENDA */
+  .subtabs { display: flex; background: var(--paper); border-bottom: 1px solid var(--ink-100); padding: 0 16px; flex-shrink: 0; }
+  .subtab { flex: 1; padding: 10px 0; font-size: 11px; font-weight: 700; color: var(--ink-400); text-align: center; cursor: pointer; border-bottom: 2px solid transparent; letter-spacing: 0.02em; transition: all 140ms; }
+  .subtab.active { color: var(--cranberry); border-bottom-color: var(--cranberry); }
+
+  .agenda-view { display: none; }
+  .agenda-view.active { display: block; }
+
+  .month-group { margin: 12px 16px 0; }
+  .month-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0 8px; user-select: none; }
+  .month-name { font-size: 22px; font-weight: 800; color: var(--ink-1000); letter-spacing: -0.03em; line-height: 1; }
+  .month-name span { font-size: 13px; font-weight: 500; color: var(--ink-400); margin-left: 6px; letter-spacing: 0; }
+  .month-chevron { font-size: 18px; color: var(--ink-400); transition: transform 200ms; }
+  .month-chevron.open { transform: rotate(180deg); }
+  .month-divider { height: 1px; background: var(--ink-100); margin-bottom: 10px; }
+  .month-events.collapsed { display: none; }
+
+  .event-card { background: var(--paper); border-radius: 14px; border: 1px solid var(--ink-100); margin-bottom: 8px; overflow: hidden; display: flex; cursor: pointer; transition: transform 140ms; }
+  .event-card:active { transform: scale(0.98); }
+  .event-bar { width: 4px; flex-shrink: 0; }
+  .bar-sesion-club { background: var(--blue); }
+  .bar-evento { background: var(--cranberry); }
+  .bar-proyecto { background: var(--cranberry); }
+  .bar-club-rotary { background: var(--cranberry); }
+  .bar-guest { background: var(--ink-500); }
+  .event-inner { flex: 1; padding: 11px 13px; }
+  .event-top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+  .event-type-pill { font-size: 9px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; flex-shrink: 0; }
+  .pill-sesion { background: var(--blue-tint); color: var(--blue); border: 1px solid var(--blue-border); }
+  .pill-evento { background: var(--cranberry-tint); color: var(--cranberry); border: 1px solid rgba(212,19,103,0.25); }
+  .pill-proyecto { background: var(--cranberry-tint); color: var(--cranberry); border: 1px solid rgba(212,19,103,0.25); }
+  .pill-invitado { background: var(--ink-50); color: var(--ink-600); border: 1px solid var(--ink-200); }
+  .event-date-col { text-align: right; flex-shrink: 0; }
+  .event-day-big { font-size: 22px; font-weight: 800; color: var(--ink-1000); line-height: 1; letter-spacing: -0.03em; }
+  .event-dow { font-size: 9px; font-weight: 600; color: var(--ink-400); text-transform: uppercase; letter-spacing: 0.08em; }
+  .event-title { font-size: 14px; font-weight: 700; color: var(--ink-1000); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 5px; }
+  .event-meta-row { display: flex; align-items: center; gap: 10px; }
+  .event-meta-row span { font-size: 11px; color: var(--ink-500); display: flex; align-items: center; gap: 3px; }
+  .event-meta-row i { font-size: 12px; }
+  .event-flyer-hint { display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 10px; font-weight: 700; color: var(--cranberry); }
+  .event-flyer-hint i { font-size: 12px; }
+
+  .legend-row { display: flex; gap: 12px; padding: 10px 16px 0; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; color: var(--ink-600); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* PROJECTS LIST */
+  .projects-wrap { padding: 14px 16px; }
+  .project-card { background: var(--paper); border-radius: 14px; border: 1px solid var(--ink-100); margin-bottom: 10px; overflow: hidden; cursor: pointer; transition: transform 140ms; }
+  .project-card:active { transform: scale(0.98); }
+  .project-img { height: 90px; position: relative; }
+  .project-area-badge { position: absolute; bottom: 8px; left: 10px; background: rgba(255,255,255,0.18); border-radius: 999px; padding: 3px 10px; font-size: 9px; font-weight: 700; color: white; letter-spacing: 0.1em; text-transform: uppercase; }
+  .project-body { padding: 12px 14px; }
+  .project-title { font-size: 15px; font-weight: 800; color: var(--ink-1000); letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 4px; }
+  .project-desc { font-size: 12px; color: var(--ink-600); line-height: 1.55; margin-bottom: 10px; }
+  .project-meta-row { display: flex; align-items: center; justify-content: space-between; }
+  .leader-wrap { display: flex; align-items: center; gap: 6px; }
+  .leader-avatar { width: 20px; height: 20px; border-radius: 50%; background: var(--cranberry-tint); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: var(--cranberry); }
+  .leader-name { font-size: 11px; color: var(--ink-600); font-weight: 500; }
+  .deadline-chip { font-size: 10px; color: var(--ink-500); font-weight: 600; background: var(--ink-50); border-radius: 999px; padding: 3px 8px; display: flex; align-items: center; gap: 3px; }
+  .linked-events { border-top: 1px solid var(--ink-100); padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
+  .linked-label { font-size: 10px; color: var(--ink-500); font-weight: 600; }
+  .linked-chip { font-size: 10px; font-weight: 700; color: var(--cranberry); background: var(--cranberry-wash); border-radius: 999px; padding: 2px 8px; }
+  .project-open-hint { border-top: 1px solid var(--ink-100); padding: 8px 14px; display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 10px; font-weight: 700; color: var(--cranberry); }
+
+  /* PROJECT DETAIL PANEL */
+  .detail-panel { position: absolute; inset: 0; background: var(--paper); transform: translateX(100%); transition: transform 320ms cubic-bezier(.22,.61,.36,1); z-index: 50; display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; }
+  .detail-panel.open { transform: translateX(0); }
+  .detail-header { background: var(--paper); border-bottom: 1px solid var(--ink-100); padding: 13px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .detail-back { width: 32px; height: 32px; border-radius: 50%; background: var(--ink-50); border: 1px solid var(--ink-100); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .detail-back i { font-size: 16px; color: var(--ink-600); }
+  .detail-header-title { font-size: 13px; font-weight: 700; color: var(--ink-1000); letter-spacing: -0.02em; flex: 1; }
+  .detail-body { flex: 1; overflow-y: auto; }
+  .detail-img { height: 160px; position: relative; }
+  .detail-area-badge { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.18); border-radius: 999px; padding: 4px 12px; font-size: 9px; font-weight: 700; color: white; letter-spacing: 0.12em; text-transform: uppercase; }
+  .detail-updated { position: absolute; bottom: 12px; right: 12px; background: rgba(14,10,20,0.5); border-radius: 999px; padding: 3px 10px; font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.8); }
+
+  .detail-content { padding: 18px 16px 32px; }
+  .detail-title { font-size: 22px; font-weight: 800; color: var(--ink-1000); letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 6px; }
+  .detail-leader-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .detail-leader-av { width: 24px; height: 24px; border-radius: 50%; background: var(--cranberry-tint); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: var(--cranberry); }
+  .detail-leader-name { font-size: 12px; color: var(--ink-600); font-weight: 500; }
+  .detail-deadline { margin-left: auto; font-size: 10px; font-weight: 700; color: var(--cranberry); background: var(--cranberry-wash); border-radius: 999px; padding: 3px 10px; border: 1px solid rgba(212,19,103,0.15); }
+
+  .detail-section { margin-bottom: 18px; }
+  .detail-section-label { font-size: 9px; font-weight: 800; color: var(--cranberry); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 6px; }
+  .detail-text { font-size: 13px; color: var(--ink-700); line-height: 1.6; }
+
+  .detail-events-list { display: flex; flex-direction: column; gap: 8px; }
+  .detail-event-row { background: var(--ink-25); border-radius: 10px; border: 1px solid var(--ink-100); padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .detail-event-date { font-size: 18px; font-weight: 800; color: var(--ink-1000); letter-spacing: -0.03em; line-height: 1; min-width: 28px; text-align: center; }
+  .detail-event-month { font-size: 9px; font-weight: 600; color: var(--ink-400); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
+  .detail-event-info { flex: 1; }
+  .detail-event-title { font-size: 12px; font-weight: 700; color: var(--ink-1000); margin-bottom: 2px; }
+  .detail-event-meta { font-size: 11px; color: var(--ink-500); }
+  .detail-event-pill { font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; background: var(--cranberry-tint); color: var(--cranberry); border: 1px solid rgba(212,19,103,0.2); }
+
+  .steps-list { display: flex; flex-direction: column; gap: 8px; }
+  .step-row { display: flex; gap: 10px; align-items: flex-start; }
+  .step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--cranberry); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: white; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: var(--ink-700); line-height: 1.5; }
+
+  .help-list { display: flex; flex-direction: column; gap: 8px; }
+  .help-row { background: var(--cranberry-wash); border-radius: 10px; border: 1px solid rgba(212,19,103,0.12); padding: 10px 12px; display: flex; align-items: flex-start; gap: 8px; }
+  .help-icon { font-size: 14px; color: var(--cranberry); margin-top: 1px; flex-shrink: 0; }
+  .help-text { font-size: 12px; color: var(--ink-700); line-height: 1.5; font-weight: 500; }
+
+  /* ACTAS */
+  .actas-section { padding: 14px 16px; }
+  .acta-card { background: var(--paper); border-radius: 14px; border: 1px solid var(--ink-100); margin-bottom: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 140ms; }
+  .acta-card.open { border-color: rgba(212,19,103,0.3); background: var(--cranberry-wash); }
+  .acta-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--ink-50); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .acta-icon i { font-size: 18px; color: var(--cranberry); }
+  .acta-title { font-size: 13px; font-weight: 700; color: var(--ink-1000); margin-bottom: 2px; }
+  .acta-date { font-size: 11px; color: var(--ink-500); }
+  .acta-chevron { margin-left: auto; font-size: 16px; color: var(--ink-400); transition: transform 200ms; }
+  .acta-chevron.open { transform: rotate(180deg); }
+  .pdf-viewer { background: var(--ink-100); border-radius: 12px; margin-bottom: 10px; overflow: hidden; border: 1px solid var(--ink-200); display: none; }
+  .pdf-viewer.open { display: block; }
+  .pdf-header { background: var(--ink-1000); padding: 9px 14px; display: flex; align-items: center; }
+  .pdf-title-text { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); }
+  .pdf-body { background: #ddd; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .pdf-page { background: white; width: 120px; height: 155px; border-radius: 3px; padding: 10px; display: flex; flex-direction: column; gap: 5px; }
+  .pdf-line { height: 5px; background: var(--ink-100); border-radius: 3px; }
+  .pdf-line.h { height: 8px; background: var(--ink-200); }
+  .pdf-line.s { width: 60%; }
+  .pdf-hint { font-size: 9px; color: #888; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .pdf-footer { background: var(--ink-1000); padding: 8px 14px; display: flex; gap: 8px; justify-content: center; }
+  .pdf-btn { font-size: 11px; font-weight: 600; color: white; background: rgba(255,255,255,0.12); border-radius: 999px; padding: 5px 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+  /* NOSOTROS */
+  .nosotros-wrap { padding: 16px; }
+  .nosotros-card { background: var(--paper); border-radius: 14px; border: 1px solid var(--ink-100); padding: 14px; margin-bottom: 10px; }
+  .nosotros-heading { font-size: 10px; font-weight: 800; color: var(--cranberry); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; }
+  .nosotros-text { font-size: 13px; color: var(--ink-700); line-height: 1.6; }
+  .doc-link { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--ink-100); }
+  .doc-icon-wrap { width: 32px; height: 32px; border-radius: 8px; background: var(--ink-50); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .doc-icon-wrap i { font-size: 16px; color: var(--ink-600); }
+  .doc-title { font-size: 13px; font-weight: 600; color: var(--ink-1000); }
+  .doc-sub { font-size: 11px; color: var(--ink-500); }
+  .doc-arrow { margin-left: auto; font-size: 16px; color: var(--ink-400); }
+
+  /* LIGHTBOX */
+  .lightbox { position: absolute; inset: 0; background: rgba(14,10,20,0.92); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 18px; }
+  .lightbox.open { display: flex; }
+  .lb-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .lb-close i { font-size: 17px; color: white; }
+  .lb-img { width: 88%; aspect-ratio: 9/16; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; max-height: 400px; }
+  .lb-title { margin-top: 14px; font-size: 15px; font-weight: 700; color: white; text-align: center; padding: 0 20px; }
+  .lb-date { font-size: 11px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 3px; }
+  .lb-nav { display: flex; gap: 12px; margin-top: 16px; }
+  .lb-btn { background: rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 18px; font-size: 12px; font-weight: 700; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+</style>
+
+<div class="phone">
+ <div class="screen" id="main-screen">
+
+  <div class="header">
+   <div class="header-top">
+    <div class="logo-circle"><span>UK</span></div>
+    <div>
+     <div class="brand-title">Rotaract Uwara Kik'</div>
+     <div class="brand-sub">Guatemala · 2025</div>
+    </div>
+   </div>
+  </div>
+
+  <div class="tabs-wrap">
+   <div class="tabs">
+    <div class="tab active" onclick="showTab('inicio')"><i class="ti ti-home" aria-hidden="true"></i>Inicio</div>
+    <div class="tab" onclick="showTab('agenda')"><i class="ti ti-calendar-event" aria-hidden="true"></i>Agenda</div>
+    <div class="tab" onclick="showTab('proyectos')"><i class="ti ti-rocket" aria-hidden="true"></i>Proyectos</div>
+    <div class="tab" onclick="showTab('actas')"><i class="ti ti-file-text" aria-hidden="true"></i>Actas</div>
+    <div class="tab" onclick="showTab('nosotros')"><i class="ti ti-users" aria-hidden="true"></i>Nosotros</div>
+   </div>
+  </div>
+
+  <!-- INICIO -->
+  <div class="content active" id="content-inicio">
+   <div class="hero">
+    <div class="hero-eyebrow">Rotaract Club</div>
+    <div class="hero-title">Uwara <em>Kik'</em></div>
+    <div class="hero-sub">Unidos por sangre — la sangre de la amistad y el deseo de servir.</div>
+    <div class="stats-row">
+     <div class="stat-pill"><div class="stat-val">24</div><div class="stat-lbl">Miembros</div></div>
+     <div class="stat-pill"><div class="stat-val">3</div><div class="stat-lbl">Proyectos</div></div>
+     <div class="stat-pill"><div class="stat-val">2025</div><div class="stat-lbl">Año</div></div>
+    </div>
+   </div>
+   <div class="avisos-section">
+    <div class="section-label">Avisos</div>
+    <div class="carousel-wrap">
+     <div class="carousel-img-track-wrap" onclick="openLightbox(currentSlide)">
+      <div class="carousel-track" id="carousel-track">
+       <div class="carousel-slide slide-bg-1"></div>
+       <div class="carousel-slide slide-bg-2"></div>
+       <div class="carousel-slide slide-bg-3"></div>
+      </div>
+      <div class="slide-tap-hint">Toca para ampliar</div>
+     </div>
+     <div class="carousel-below">
+      <div class="carousel-info">
+       <div class="carousel-text">
+        <div class="c-title" id="c-title">Cambio de sede — Sesión Mayo</div>
+        <div class="c-date" id="c-date">8 de mayo, 2025</div>
+       </div>
+       <div class="carousel-dots" id="carousel-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="section-label-sm">Recordatorios</div>
+    <div class="reminder-card">
+     <div class="reminder-top"><span class="reminder-badge">Recordatorio</span><span class="reminder-date">5 mayo 2025</span></div>
+     <div class="reminder-title">Cuotas pendientes — Junio</div>
+     <div class="reminder-text">El plazo para el pago de la cuota mensual vence el 15 de junio.</div>
+    </div>
+    <div class="reminder-card">
+     <div class="reminder-top"><span class="reminder-badge">Recordatorio</span><span class="reminder-date">3 mayo 2025</span></div>
+     <div class="reminder-title">Confirmar asistencia — Sesión 18 mayo</div>
+     <div class="reminder-text">Avisar a la junta directiva si no pueden asistir.</div>
+    </div>
+   </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div class="content" id="content-agenda" style="display:none;flex-direction:column;">
+   <div class="subtabs">
+    <div class="subtab active" onclick="showSubtab('miclub')">Mi Club</div>
+    <div class="subtab" onclick="showSubtab('rotary')">Rotaract Guatemala</div>
+   </div>
+   <div style="flex:1;overflow-y:auto;background:var(--ink-25);">
+    <div class="agenda-view active" id="subtab-miclub">
+     <div class="month-group">
+      <div class="month-header" onclick="toggleMonth(this)">
+       <div class="month-name">Mayo <span>2025</span></div>
+       <i class="ti ti-chevron-down month-chevron open" aria-hidden="true"></i>
+      </div>
+      <div class="month-divider"></div>
+      <div class="month-events">
+       <div class="event-card">
+        <div class="event-bar bar-sesion-club"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-sesion">Sesión</span>
+          <div class="event-date-col"><div class="event-day-big">18</div><div class="event-dow">Dom</div></div>
+         </div>
+         <div class="event-title">Sesión quincenal del club</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>10:00 AM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Sede Rotary</span></div>
+        </div>
+       </div>
+       <div class="event-card">
+        <div class="event-bar bar-proyecto"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-proyecto">Proyecto</span>
+          <div class="event-date-col"><div class="event-day-big">24</div><div class="event-dow">Sáb</div></div>
+         </div>
+         <div class="event-title">Jornada de reforestación — Fase 2</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>8:00 AM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Reserva Xibalbá</span></div>
+         <div class="event-flyer-hint"><i class="ti ti-photo" aria-hidden="true"></i>Ver flyer</div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="month-group">
+      <div class="month-header" onclick="toggleMonth(this)">
+       <div class="month-name">Junio <span>2025</span></div>
+       <i class="ti ti-chevron-down month-chevron open" aria-hidden="true"></i>
+      </div>
+      <div class="month-divider"></div>
+      <div class="month-events">
+       <div class="event-card">
+        <div class="event-bar bar-sesion-club"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-sesion">Sesión</span>
+          <div class="event-date-col"><div class="event-day-big">1</div><div class="event-dow">Dom</div></div>
+         </div>
+         <div class="event-title">Sesión quincenal del club</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>10:00 AM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Sede Rotary</span></div>
+        </div>
+       </div>
+       <div class="event-card">
+        <div class="event-bar bar-evento"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-evento">Evento</span>
+          <div class="event-date-col"><div class="event-day-big">7</div><div class="event-dow">Sáb</div></div>
+         </div>
+         <div class="event-title">Noche cultural Rotaract</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>7:00 PM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Centro Cultural</span></div>
+         <div class="event-flyer-hint"><i class="ti ti-photo" aria-hidden="true"></i>Ver flyer</div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+
+    <div class="agenda-view" id="subtab-rotary">
+     <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--cranberry)"></div>Uwara Kik'</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ink-500)"></div>Otros clubes</div>
+     </div>
+     <div class="month-group">
+      <div class="month-header" onclick="toggleMonth(this)">
+       <div class="month-name">Mayo <span>2025</span></div>
+       <i class="ti ti-chevron-down month-chevron open" aria-hidden="true"></i>
+      </div>
+      <div class="month-divider"></div>
+      <div class="month-events">
+       <div class="event-card">
+        <div class="event-bar bar-club-rotary"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-sesion">Sesión</span>
+          <div class="event-date-col"><div class="event-day-big">18</div><div class="event-dow">Dom</div></div>
+         </div>
+         <div class="event-title">Sesión quincenal del club</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>10:00 AM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Sede Rotary</span></div>
+        </div>
+       </div>
+       <div class="event-card">
+        <div class="event-bar bar-guest"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-invitado">Invitado</span>
+          <div class="event-date-col"><div class="event-day-big">21</div><div class="event-dow">Mié</div></div>
+         </div>
+         <div class="event-title">Feria vocacional — Club Quetzal</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>9:00 AM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Campus Landívar</span></div>
+         <div class="event-flyer-hint"><i class="ti ti-photo" aria-hidden="true"></i>Ver flyer</div>
+        </div>
+       </div>
+       <div class="event-card">
+        <div class="event-bar bar-club-rotary"></div>
+        <div class="event-inner">
+         <div class="event-top-row">
+          <span class="event-type-pill pill-proyecto">Proyecto</span>
+          <div class="event-date-col"><div class="event-day-big">24</div><div class="event-dow">Sáb</div></div>
+         </div>
+         <div class="event-title">Jornada de reforestación — Fase 2</div>
+         <div class="event-meta-row"><span><i class="ti ti-clock" aria-hidden="true"></i>8:00 AM</span><span><i class="ti ti-map-pin" aria-hidden="true"></i>Reserva Xibalbá</span></div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- PROYECTOS -->
+  <div class="content" id="content-proyectos">
+   <div class="projects-wrap">
+    <div class="section-label">Proyectos activos</div>
+    <div class="project-card" onclick="openProject('reforestacion')">
+     <div class="project-img" style="background:linear-gradient(135deg,#2a7a35,#1a6fa8)">
+      <div class="project-area-badge">Medio ambiente</div>
+     </div>
+     <div class="project-body">
+      <div class="project-title">Reforestación Xibalbá</div>
+      <div class="project-desc">Siembra de árboles nativos en zonas degradadas. Meta: 500 árboles en 3 fases.</div>
+      <div class="project-meta-row">
+       <div class="leader-wrap"><div class="leader-avatar">AM</div><div class="leader-name">Ana Morales</div></div>
+       <div class="deadline-chip"><i class="ti ti-calendar" aria-hidden="true"></i>Jun 2025</div>
+      </div>
+     </div>
+     <div class="project-open-hint"><i class="ti ti-arrow-right" aria-hidden="true"></i>Ver proyecto completo</div>
+    </div>
+    <div class="project-card" onclick="openProject('biblioteca')">
+     <div class="project-img" style="background:linear-gradient(135deg,#d41367,#7a7280)">
+      <div class="project-area-badge">Educación</div>
+     </div>
+     <div class="project-body">
+      <div class="project-title">Biblioteca Móvil</div>
+      <div class="project-desc">Dotación de libros y talleres de lectura en comunidades rurales.</div>
+      <div class="project-meta-row">
+       <div class="leader-wrap"><div class="leader-avatar">CR</div><div class="leader-name">Carlos Rivas</div></div>
+       <div class="deadline-chip"><i class="ti ti-calendar" aria-hidden="true"></i>Ago 2025</div>
+      </div>
+     </div>
+     <div class="project-open-hint"><i class="ti ti-arrow-right" aria-hidden="true"></i>Ver proyecto completo</div>
+    </div>
+   </div>
+  </div>
+
+  <!-- ACTAS -->
+  <div class="content" id="content-actas">
+   <div class="actas-section">
+    <div class="section-label">Actas de reunión</div>
+    <div class="acta-card" onclick="toggleActa(this,'pdf-1')">
+     <div class="acta-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div>
+     <div><div class="acta-title">Sesión ordinaria — Mayo 2025</div><div class="acta-date">4 de mayo, 2025</div></div>
+     <i class="ti ti-chevron-down acta-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="pdf-viewer" id="pdf-1">
+     <div class="pdf-header"><span class="pdf-title-text">Acta Mayo 2025.pdf</span></div>
+     <div class="pdf-body"><div class="pdf-page"><div class="pdf-line h"></div><div class="pdf-line"></div><div class="pdf-line s"></div><div class="pdf-line"></div><div class="pdf-line s"></div></div><div class="pdf-hint">Vista previa</div></div>
+     <div class="pdf-footer"><div class="pdf-btn"><i class="ti ti-external-link" aria-hidden="true"></i>Abrir en Drive</div><div class="pdf-btn"><i class="ti ti-download" aria-hidden="true"></i>Descargar</div></div>
+    </div>
+    <div class="acta-card" onclick="toggleActa(this,'pdf-2')">
+     <div class="acta-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div>
+     <div><div class="acta-title">Sesión ordinaria — Abril 2025</div><div class="acta-date">20 de abril, 2025</div></div>
+     <i class="ti ti-chevron-down acta-chevron" aria-hidden="true"></i>
+    </div>
+    <div class="pdf-viewer" id="pdf-2">
+     <div class="pdf-header"><span class="pdf-title-text">Acta Abril 2025.pdf</span></div>
+     <div class="pdf-body"><div class="pdf-page"><div class="pdf-line h"></div><div class="pdf-line"></div><div class="pdf-line s"></div><div class="pdf-line"></div></div><div class="pdf-hint">Vista previa</div></div>
+     <div class="pdf-footer"><div class="pdf-btn"><i class="ti ti-external-link" aria-hidden="true"></i>Abrir en Drive</div><div class="pdf-btn"><i class="ti ti-download" aria-hidden="true"></i>Descargar</div></div>
+    </div>
+   </div>
+  </div>
+
+  <!-- NOSOTROS -->
+  <div class="content" id="content-nosotros">
+   <div class="nosotros-wrap">
+    <div class="nosotros-card">
+     <div class="nosotros-heading">Quiénes somos</div>
+     <div class="nosotros-text">Somos Rotaract Uwara Kik' — "unidos por sangre", la sangre de la amistad y el deseo de servir. Jóvenes de 18 a 30 años comprometidos con Guatemala.</div>
+    </div>
+    <div class="nosotros-card">
+     <div class="nosotros-heading">Guías y recursos</div>
+     <div class="doc-link">
+      <div class="doc-icon-wrap"><i class="ti ti-file-description" aria-hidden="true"></i></div>
+      <div><div class="doc-title">Cómo crear un proyecto</div><div class="doc-sub">Guía oficial Rotaract</div></div>
+      <i class="ti ti-external-link doc-arrow" aria-hidden="true"></i>
+     </div>
+     <div class="doc-link">
+      <div class="doc-icon-wrap"><i class="ti ti-presentation" aria-hidden="true"></i></div>
+      <div><div class="doc-title">Presentación del club</div><div class="doc-sub">Introducción para nuevos miembros</div></div>
+      <i class="ti ti-external-link doc-arrow" aria-hidden="true"></i>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- PROJECT DETAIL PANEL -->
+  <div class="detail-panel" id="detail-panel">
+   <div class="detail-header">
+    <div class="detail-back" onclick="closeProject()"><i class="ti ti-x" aria-hidden="true"></i></div>
+    <div class="detail-header-title" id="detail-header-title">Proyecto</div>
+   </div>
+   <div class="detail-body" id="detail-body"></div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+   <div class="lb-close" onclick="closeLightbox()"><i class="ti ti-x" aria-hidden="true"></i></div>
+   <div class="lb-img" id="lb-img"></div>
+   <div class="lb-title" id="lb-title"></div>
+   <div class="lb-date" id="lb-date"></div>
+   <div class="lb-nav">
+    <div class="lb-btn" onclick="lbNav(-1)"><i class="ti ti-arrow-left" aria-hidden="true"></i>Anterior</div>
+    <div class="lb-btn" onclick="lbNav(1)">Siguiente<i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+   </div>
+  </div>
+
+ </div>
+</div>
+
+<script>
+const slides = [
+  { title:'Cambio de sede — Sesión Mayo', date:'8 de mayo, 2025', bg:'linear-gradient(135deg,#d41367,#3d3445)' },
+  { title:'Noche cultural Rotaract', date:'1 de mayo, 2025', bg:'linear-gradient(135deg,#1a6fa8,#d41367)' },
+  { title:'Jornada de reforestación', date:'28 de abril, 2025', bg:'linear-gradient(135deg,#2a7a35,#1a6fa8)' }
+];
+let currentSlide = 0, autoTimer;
+
+function goToSlide(n) {
+  currentSlide = (n + slides.length) % slides.length;
+  document.getElementById('carousel-track').style.transform = `translateX(-${currentSlide*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===currentSlide));
+  document.getElementById('c-title').textContent = slides[currentSlide].title;
+  document.getElementById('c-date').textContent = slides[currentSlide].date;
+}
+function startAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => goToSlide(currentSlide+1), 3500); }
+startAuto();
+
+function openLightbox(idx) {
+  clearInterval(autoTimer);
+  document.getElementById('lightbox').classList.add('open');
+  renderLB(idx);
+}
+function renderLB(idx) {
+  currentSlide = (idx+slides.length)%slides.length;
+  const s = slides[currentSlide];
+  const img = document.getElementById('lb-img');
+  img.style.background = s.bg;
+  img.textContent = 'FLYER';
+  document.getElementById('lb-title').textContent = s.title;
+  document.getElementById('lb-date').textContent = s.date;
+}
+function lbNav(dir) { renderLB(currentSlide+dir); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); startAuto(); }
+
+function showTab(name) {
+  document.querySelectorAll('.content').forEach(c => { c.classList.remove('active'); c.style.display=''; });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('content-'+name);
+  el.classList.add('active');
+  if(name==='agenda') el.style.display='flex';
+  const tabs = ['inicio','agenda','proyectos','actas','nosotros'];
+  document.querySelectorAll('.tab')[tabs.indexOf(name)].classList.add('active');
+}
+
+function showSubtab(name) {
+  document.querySelectorAll('.agenda-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+  document.getElementById('subtab-'+name).classList.add('active');
+  ['miclub','rotary'].forEach((n,i) => { if(n===name) document.querySelectorAll('.subtab')[i].classList.add('active'); });
+}
+
+function toggleMonth(header) {
+  const events = header.nextElementSibling.nextElementSibling;
+  const chevron = header.querySelector('.month-chevron');
+  const isOpen = !events.classList.contains('collapsed');
+  events.classList.toggle('collapsed', isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function toggleActa(card, pdfId) {
+  const pdf = document.getElementById(pdfId);
+  const chevron = card.querySelector('.acta-chevron');
+  const isOpen = pdf.classList.contains('open');
+  document.querySelectorAll('.pdf-viewer').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.acta-card').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.acta-chevron').forEach(c => c.classList.remove('open'));
+  if(!isOpen) { pdf.classList.add('open'); card.classList.add('open'); chevron.classList.add('open'); }
+}
+
+const projectData = {
+  reforestacion: {
+    title: 'Reforestación Xibalbá',
+    area: 'Medio ambiente',
+    bg: 'linear-gradient(135deg,#2a7a35,#1a6fa8)',
+    leader: { initials:'AM', name:'Ana Morales' },
+    deadline: 'Jun 2025',
+    updated: 'Actualizado: 4 mayo',
+    objetivo: 'Reforestar 3 hectáreas de zona degradada en la Reserva Xibalbá mediante la siembra de 500 árboles nativos distribuidos en 3 fases durante 2025.',
+    contexto: 'La Reserva Xibalbá ha perdido el 40% de su cobertura forestal en los últimos 10 años debido a la expansión agrícola no controlada. Este proyecto busca restaurar el ecosistema nativo y crear conciencia ambiental en comunidades locales.',
+    eventos: [
+      { day:'24', month:'Mayo', title:'Jornada de reforestación — Fase 2', meta:'8:00 AM · Reserva Xibalbá' },
+      { day:'14', month:'Jun', title:'Jornada de reforestación — Fase 3', meta:'8:00 AM · Reserva Xibalbá' }
+    ],
+    pasos: ['Confirmar transporte para el 24 de mayo con todos los voluntarios.','Coordinar con guardabosques la zona de siembra de la Fase 2.','Documentar con fotos y video el avance para el informe final.'],
+    ayuda: ['Voluntarios para jornada de siembra — mínimo 4 horas.','Donación de herramientas: palas, cubetas, guantes.','Apoyo en documentación y redes sociales del evento.']
+  },
+  biblioteca: {
+    title: 'Biblioteca Móvil',
+    area: 'Educación',
+    bg: 'linear-gradient(135deg,#d41367,#7a7280)',
+    leader: { initials:'CR', name:'Carlos Rivas' },
+    deadline: 'Ago 2025',
+    updated: 'Actualizado: 20 abril',
+    objetivo: 'Llevar libros y talleres de lectura a 4 comunidades rurales del departamento, beneficiando a más de 200 niños en edad escolar.',
+    contexto: 'En las comunidades rurales del altiplano, el acceso a material de lectura es limitado. La biblioteca móvil lleva una selección de libros y facilita talleres de animación lectora en coordinación con maestros locales.',
+    eventos: [
+      { day:'7', month:'Jun', title:'Visita Comunidad San Lucas', meta:'9:00 AM · San Lucas Tolimán' }
+    ],
+    pasos: ['Clasificar y empacar los libros donados por categoría de edad.','Coordinar con la maestra de San Lucas la logística de la visita.','Preparar dinámica de animación lectora para 30 minutos.'],
+    ayuda: ['Donación de libros infantiles y juveniles en buen estado.','Transporte para el 7 de junio (camioneta o pickup).','Facilitadores para el taller de lectura (1-2 personas).']
+  }
+};
+
+function openProject(id) {
+  const p = projectData[id];
+  document.getElementById('detail-header-title').textContent = p.title;
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-img" style="background:${p.bg}">
+      <div class="detail-area-badge">${p.area}</div>
+      <div class="detail-updated">${p.updated}</div>
+    </div>
+    <div class="detail-content">
+      <div class="detail-title">${p.title}</div>
+      <div class="detail-leader-row">
+        <div class="detail-leader-av">${p.leader.initials}</div>
+        <div class="detail-leader-name">${p.leader.name}</div>
+        <div class="detail-deadline">${p.deadline}</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Objetivo</div>
+        <div class="detail-text">${p.objetivo}</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Contexto</div>
+        <div class="detail-text">${p.contexto}</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Eventos del proyecto</div>
+        <div class="detail-events-list">${p.eventos.map(e=>`
+          <div class="detail-event-row">
+            <div><div class="detail-event-date">${e.day}</div><div class="detail-event-month">${e.month}</div></div>
+            <div class="detail-event-info">
+              <div class="detail-event-title">${e.title}</div>
+              <div class="detail-event-meta">${e.meta}</div>
+            </div>
+            <span class="detail-event-pill">Proyecto</span>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Próximos pasos</div>
+        <div class="steps-list">${p.pasos.map((s,i)=>`
+          <div class="step-row">
+            <div class="step-num">${i+1}</div>
+            <div class="step-text">${s}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Cómo ayudar</div>
+        <div class="help-list">${p.ayuda.map(a=>`
+          <div class="help-row">
+            <i class="ti ti-heart help-icon" aria-hidden="true"></i>
+            <div class="help-text">${a}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeProject() {
+  document.getElementById('detail-panel').classList.remove('open');
+}
+</script>
