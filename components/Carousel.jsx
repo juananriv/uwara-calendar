@@ -6,7 +6,7 @@ export default function Carousel({ slides, onOpenLightbox, isLightboxOpen }) {
   const timerRef = useRef(null);
 
   const startAuto = useCallback(() => {
-    if (!slides?.length) return;
+    if (!slides?.length || slides.length === 1) return;
     clearInterval(timerRef.current);
     timerRef.current = setInterval(
       () => setCurrent(c => (c + 1) % slides.length),
@@ -63,11 +63,13 @@ export default function Carousel({ slides, onOpenLightbox, isLightboxOpen }) {
             <div className="c-title">{slide.titulo}</div>
             <div className="c-date">{slide.fecha}</div>
           </div>
-          <div className="carousel-dots">
-            {slides.map((_, i) => (
-              <div key={i} className={`dot${i === safeIdx ? ' active' : ''}`} />
-            ))}
-          </div>
+          {slides.length > 1 && (
+            <div className="carousel-dots">
+              {slides.map((_, i) => (
+                <div key={i} className={`dot${i === safeIdx ? ' active' : ''}`} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
