@@ -1,47 +1,56 @@
-import { IconFileDescription, IconPresentation, IconExternalLink } from '@tabler/icons-react';
+'use client';
+import { IconFileDescription, IconPresentation, IconFileText, IconChevronRight } from '@tabler/icons-react';
 
-export default function Nosotros() {
+function ItemIcon({ tipo }) {
+  const t = (tipo || '').toLowerCase();
+  if (t.includes('presentac')) return <IconPresentation size={16} color="var(--ink-600)" aria-hidden="true" />;
+  if (t.includes('pdf')) return <IconFileText size={16} color="var(--ink-600)" aria-hidden="true" />;
+  return <IconFileDescription size={16} color="var(--ink-600)" aria-hidden="true" />;
+}
+
+export default function Nosotros({ nosotros, onOpenItem }) {
   return (
     <div className="content active">
       <div className="nosotros-wrap">
-        <div className="nosotros-card">
-          <div className="nosotros-heading">Quiénes somos</div>
-          <div className="nosotros-text">
-            Somos Rotaract Uwara Kik&apos; — &quot;unidos por sangre&quot;, la sangre de la amistad
-            y el deseo de servir. Jóvenes de 18 a 30 años comprometidos con Guatemala.
-          </div>
-        </div>
-        <div className="nosotros-card">
-          <div className="nosotros-heading">Guías y recursos</div>
-          <div className="doc-link">
-            <div className="doc-icon-wrap">
-              <IconFileDescription size={16} color="var(--ink-600)" aria-hidden="true" />
+        {nosotros.map((item, i) => {
+          const hasLink = Boolean(item.preview_url);
+          return (
+            <div
+              key={i}
+              className="nosotros-card"
+              style={{ cursor: hasLink ? 'pointer' : 'default' }}
+              onClick={hasLink ? () => onOpenItem(item) : undefined}
+            >
+              {hasLink ? (
+                <div className="doc-link" style={{ borderTop: 'none', paddingTop: 0 }}>
+                  <div className="doc-icon-wrap">
+                    <ItemIcon tipo={item.tipo} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div className="doc-title">{item.titulo}</div>
+                    {item.descripcion && <div className="doc-sub">{item.descripcion}</div>}
+                  </div>
+                  <IconChevronRight
+                    size={16}
+                    aria-hidden="true"
+                    style={{ marginLeft: 'auto', color: 'var(--cranberry)', flexShrink: 0 }}
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className="nosotros-heading">{item.titulo}</div>
+                  {item.descripcion && <div className="nosotros-text">{item.descripcion}</div>}
+                </>
+              )}
             </div>
-            <div>
-              <div className="doc-title">Cómo crear un proyecto</div>
-              <div className="doc-sub">Guía oficial Rotaract</div>
-            </div>
-            <IconExternalLink
-              size={16}
-              aria-hidden="true"
-              style={{ marginLeft: 'auto', color: 'var(--ink-400)' }}
-            />
-          </div>
-          <div className="doc-link">
-            <div className="doc-icon-wrap">
-              <IconPresentation size={16} color="var(--ink-600)" aria-hidden="true" />
-            </div>
-            <div>
-              <div className="doc-title">Presentación del club</div>
-              <div className="doc-sub">Introducción para nuevos miembros</div>
-            </div>
-            <IconExternalLink
-              size={16}
-              aria-hidden="true"
-              style={{ marginLeft: 'auto', color: 'var(--ink-400)' }}
-            />
-          </div>
-        </div>
+          );
+        })}
+
+        {nosotros.length === 0 && (
+          <p style={{ color: 'var(--ink-400)', fontSize: 13, marginTop: 8 }}>
+            No hay información disponible.
+          </p>
+        )}
       </div>
     </div>
   );

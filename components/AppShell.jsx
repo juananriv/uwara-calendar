@@ -10,13 +10,15 @@ import Nosotros from '@/components/tabs/Nosotros';
 import ProjectDetail from '@/components/ProjectDetail';
 import EventDetail from '@/components/EventDetail';
 import ActaDetail from '@/components/ActaDetail';
+import NosotrosDetail from '@/components/NosotrosDetail';
 import Lightbox from '@/components/Lightbox';
 
-export default function AppShell({ eventos, proyectos, avisos, actas }) {
+export default function AppShell({ eventos, proyectos, avisos, actas, nosotros }) {
   const [activeTab, setActiveTab] = useState('inicio');
   const [openProject, setOpenProject] = useState(null);
   const [openEvent, setOpenEvent] = useState(null);
   const [openActa, setOpenActa] = useState(null);
+  const [openNosotrosItem, setOpenNosotrosItem] = useState(null);
   const [lightboxSlide, setLightboxSlide] = useState(null);
 
   // Split avisos into carousel slides and reminder cards once, at the shell level,
@@ -52,7 +54,7 @@ export default function AppShell({ eventos, proyectos, avisos, actas }) {
       {activeTab === 'actas' && (
         <Actas actas={actas} onOpenActa={setOpenActa} />
       )}
-      {activeTab === 'nosotros' && <Nosotros />}
+      {activeTab === 'nosotros' && <Nosotros nosotros={nosotros} onOpenItem={setOpenNosotrosItem} />}
 
       {openProject && (
         <ProjectDetail
@@ -70,6 +72,12 @@ export default function AppShell({ eventos, proyectos, avisos, actas }) {
         <ActaDetail
           acta={openActa}
           onClose={() => setOpenActa(null)}
+        />
+      )}
+      {openNosotrosItem && (
+        <NosotrosDetail
+          item={openNosotrosItem}
+          onClose={() => setOpenNosotrosItem(null)}
         />
       )}
       {lightboxSlide !== null && (
