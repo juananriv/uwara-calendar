@@ -42,6 +42,7 @@ export default function AppShell({ eventos, proyectos, avisos, actas, nosotros, 
           slides={carouselSlides}
           reminders={reminders}
           socioCount={socios.length}
+          proyectoCount={proyectos.length}
           onOpenLightbox={(idx) => setLightboxSlide(idx)}
           isLightboxOpen={lightboxSlide !== null}
         />

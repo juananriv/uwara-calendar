@@ -1,7 +1,7 @@
 'use client';
 import Carousel from '@/components/Carousel';
 
-export default function Inicio({ slides, reminders, socioCount, onOpenLightbox, isLightboxOpen }) {
+export default function Inicio({ slides, reminders, socioCount, proyectoCount, onOpenLightbox, isLightboxOpen }) {
   return (
     <div className="content active">
       <div className="hero">
@@ -18,7 +18,7 @@ export default function Inicio({ slides, reminders, socioCount, onOpenLightbox, 
             <div className="stat-lbl">Miembros</div>
           </div>
           <div className="stat-pill">
-            <div className="stat-val">3</div>
+            <div className="stat-val">{proyectoCount}</div>
             <div className="stat-lbl">Proyectos</div>
           </div>
           <div className="stat-pill">

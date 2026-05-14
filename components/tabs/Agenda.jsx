@@ -29,8 +29,11 @@ function parseFecha(str) {
   if (!str) return null;
   const iso = new Date(`${str}T12:00:00`);
   if (!isNaN(iso.getTime())) return iso;
-  const dmy = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (dmy) return new Date(parseInt(dmy[3], 10), parseInt(dmy[2], 10) - 1, parseInt(dmy[1], 10), 12);
+  const dmy = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (dmy) {
+    const yr = dmy[3].length === 2 ? 2000 + parseInt(dmy[3], 10) : parseInt(dmy[3], 10);
+    return new Date(yr, parseInt(dmy[2], 10) - 1, parseInt(dmy[1], 10), 12);
+  }
   const es = str.match(/(\d{1,2})\s+de\s+(\w+)(?:[,\s]+(\d{4}))?/i);
   if (es) {
     const month = MESES_ES[es[2].toLowerCase()];
@@ -156,24 +159,42 @@ const Empty = () => (
   </p>
 );
 
+function todayDateStr() {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+}
+
+function toDateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function isUpcoming(e) {
+  const d = parseFecha(e.fecha);
+  if (!d) return true;
+  return toDateStr(d) >= todayDateStr();
+}
+
 export default function Agenda({ eventos, onOpenEvent }) {
   const [subtab, setSubtab] = useState('miclub');
+
+  // Only show today and future events — filtered client-side using the browser's local date
+  const upcoming = useMemo(() => eventos.filter(isUpcoming), [eventos]);
 
   // Mi Club: only sesion / evento / proyecto (exclude invitado)
   const miClubGroups = useMemo(
     () => groupByMonth(
-      eventos.filter(e => {
+      upcoming.filter(e => {
         const isMyClub = !e.subtab || e.subtab.toLowerCase() === 'miclub';
         return isMyClub && MICLUB_TIPOS.has(normTipo(e.tipo));
       })
     ),
-    [eventos]
+    [upcoming]
   );
 
   // Rotaract Guatemala: all eventos, no tipo or subtab filter
   const rotaryGroups = useMemo(
-    () => groupByMonth(eventos),
-    [eventos]
+    () => groupByMonth(upcoming),
+    [upcoming]
   );
 
   return (
