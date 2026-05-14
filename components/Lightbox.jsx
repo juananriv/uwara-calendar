@@ -37,16 +37,18 @@ export default function Lightbox({ slides, initialIndex, onClose }) {
       </div>
       <div className="lb-title">{slide.titulo}</div>
       <div className="lb-date">{slide.fecha}</div>
-      <div className="lb-nav">
-        <div className="lb-btn" onClick={() => nav(-1)}>
-          <IconArrowLeft size={14} aria-hidden="true" />
-          Anterior
+      {slides.length > 1 && (
+        <div className="lb-nav">
+          <div className="lb-btn" onClick={() => nav(-1)}>
+            <IconArrowLeft size={14} aria-hidden="true" />
+            Anterior
+          </div>
+          <div className="lb-btn" onClick={() => nav(1)}>
+            Siguiente
+            <IconArrowRight size={14} aria-hidden="true" />
+          </div>
         </div>
-        <div className="lb-btn" onClick={() => nav(1)}>
-          Siguiente
-          <IconArrowRight size={14} aria-hidden="true" />
-        </div>
-      </div>
+      )}
     </div>
   );
 }
