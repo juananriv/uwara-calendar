@@ -13,7 +13,7 @@ import ActaDetail from '@/components/ActaDetail';
 import NosotrosDetail from '@/components/NosotrosDetail';
 import Lightbox from '@/components/Lightbox';
 
-export default function AppShell({ eventos, proyectos, avisos, actas, nosotros }) {
+export default function AppShell({ eventos, proyectos, avisos, actas, nosotros, socios }) {
   const [activeTab, setActiveTab] = useState('inicio');
   const [openProject, setOpenProject] = useState(null);
   const [openEvent, setOpenEvent] = useState(null);
@@ -41,6 +41,7 @@ export default function AppShell({ eventos, proyectos, avisos, actas, nosotros }
         <Inicio
           slides={carouselSlides}
           reminders={reminders}
+          socioCount={socios.length}
           onOpenLightbox={(idx) => setLightboxSlide(idx)}
           isLightboxOpen={lightboxSlide !== null}
         />
@@ -54,7 +55,7 @@ export default function AppShell({ eventos, proyectos, avisos, actas, nosotros }
       {activeTab === 'actas' && (
         <Actas actas={actas} onOpenActa={setOpenActa} />
       )}
-      {activeTab === 'nosotros' && <Nosotros nosotros={nosotros} onOpenItem={setOpenNosotrosItem} />}
+      {activeTab === 'nosotros' && <Nosotros nosotros={nosotros} socios={socios} onOpenItem={setOpenNosotrosItem} />}
 
       {openProject && (
         <ProjectDetail

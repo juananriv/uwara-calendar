@@ -1,5 +1,5 @@
 import AppShell from '@/components/AppShell';
-import { getEventos, getProyectos, getAvisos, getActas, getNosotros } from '@/lib/sheets';
+import { getEventos, getProyectos, getAvisos, getActas, getNosotros, getSocios } from '@/lib/sheets';
 
 export default async function Home() {
   let eventos: object[] = [];
@@ -7,14 +7,16 @@ export default async function Home() {
   let avisos: object[] = [];
   let actas: object[] = [];
   let nosotros: object[] = [];
+  let socios: object[] = [];
 
   try {
-    [eventos, proyectos, avisos, actas, nosotros] = await Promise.all([
+    [eventos, proyectos, avisos, actas, nosotros, socios] = await Promise.all([
       getEventos(),
       getProyectos(),
       getAvisos(),
       getActas(),
       getNosotros(),
+      getSocios(),
     ]);
   } catch (err) {
     console.error('Error fetching from Google Sheets:', err);
@@ -28,6 +30,7 @@ export default async function Home() {
         avisos={avisos}
         actas={actas}
         nosotros={nosotros}
+        socios={socios}
       />
     </div>
   );

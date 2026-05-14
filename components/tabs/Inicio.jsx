@@ -1,7 +1,7 @@
 'use client';
 import Carousel from '@/components/Carousel';
 
-export default function Inicio({ slides, reminders, onOpenLightbox, isLightboxOpen }) {
+export default function Inicio({ slides, reminders, socioCount, onOpenLightbox, isLightboxOpen }) {
   return (
     <div className="content active">
       <div className="hero">
@@ -14,7 +14,7 @@ export default function Inicio({ slides, reminders, onOpenLightbox, isLightboxOp
         </div>
         <div className="stats-row">
           <div className="stat-pill">
-            <div className="stat-val">24</div>
+            <div className="stat-val">{socioCount}</div>
             <div className="stat-lbl">Miembros</div>
           </div>
           <div className="stat-pill">
@@ -22,7 +22,7 @@ export default function Inicio({ slides, reminders, onOpenLightbox, isLightboxOp
             <div className="stat-lbl">Proyectos</div>
           </div>
           <div className="stat-pill">
-            <div className="stat-val">2025</div>
+            <div className="stat-val">{new Date().getFullYear()}</div>
             <div className="stat-lbl">Año</div>
           </div>
         </div>
