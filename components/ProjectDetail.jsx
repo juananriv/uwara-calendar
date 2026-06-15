@@ -1,7 +1,40 @@
 'use client';
-import { IconX, IconHeart } from '@tabler/icons-react';
+import { useState } from 'react';
+import { IconX, IconHeart, IconUser, IconCalendar, IconInfoCircle } from '@tabler/icons-react';
+import { estadoInfo, byFechaLimite } from '@/lib/tasks';
+
+function TaskRow({ task }) {
+  const [open, setOpen] = useState(false);
+  const hasDesc = Boolean(task.descripcion);
+  return (
+    <div
+      className={`task-row${task._estado.done ? ' task-done' : ''}`}
+      style={{ cursor: hasDesc ? 'pointer' : 'default' }}
+      onClick={hasDesc ? () => setOpen(o => !o) : undefined}
+    >
+      <div className="task-info">
+        <div className="task-title-row">
+          <div className="task-title">{task.titulo}</div>
+          {hasDesc && (
+            <IconInfoCircle size={14} className="task-info-icon" aria-label="Ver descripción" />
+          )}
+        </div>
+        <div className="task-meta">
+          {task.responsable && <span><IconUser size={12} aria-hidden="true" />{task.responsable}</span>}
+          {task.fecha_limite && <span><IconCalendar size={12} aria-hidden="true" />{task.fecha_limite}</span>}
+        </div>
+        {hasDesc && open && <div className="task-desc">{task.descripcion}</div>}
+      </div>
+      <span className={`task-status-pill ${task._estado.cls}`}>{task._estado.label}</span>
+    </div>
+  );
+}
 
 export default function ProjectDetail({ project, onClose }) {
+  const tareas = [...(project.tareas || [])]
+    .map(t => ({ ...t, _estado: estadoInfo(t.estado) }))
+    .sort(byFechaLimite);
+
   return (
     <div className="detail-panel open">
       <div className="detail-header">
@@ -91,6 +124,19 @@ export default function ProjectDetail({ project, onClose }) {
                     <IconHeart size={14} className="help-icon" aria-hidden="true" />
                     <div className="help-text">{a}</div>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="detail-section">
+            <div className="detail-section-label">Tareas</div>
+            {tareas.length === 0 ? (
+              <p style={{ fontSize: 13, color: 'var(--ink-500)', fontStyle: 'italic', margin: 0 }}>No hay tareas registradas aún</p>
+            ) : (
+              <div className="task-list">
+                {tareas.map((t, i) => (
+                  <TaskRow key={i} task={t} />
                 ))}
               </div>
             )}

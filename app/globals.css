@@ -210,7 +210,9 @@ body {
 .leader-wrap { display: flex; align-items: center; gap: 6px; }
 .leader-avatar { width: 20px; height: 20px; border-radius: 50%; background: var(--cranberry-tint); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: var(--cranberry); }
 .leader-name { font-size: 11px; color: var(--ink-600); font-weight: 500; }
+.project-meta-chips { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .deadline-chip { font-size: 10px; color: var(--ink-500); font-weight: 600; background: var(--ink-50); border-radius: 999px; padding: 3px 8px; display: flex; align-items: center; gap: 3px; }
+.tasks-chip { font-size: 10px; color: var(--cranberry); font-weight: 700; background: var(--cranberry-wash); border-radius: 999px; padding: 3px 8px; display: flex; align-items: center; gap: 3px; border: 1px solid rgba(212, 19, 103, 0.15); white-space: nowrap; }
 .project-open-hint { border-top: 1px solid var(--ink-100); padding: 8px 14px; display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 10px; font-weight: 700; color: var(--cranberry); }
 
 /* PROJECT DETAIL PANEL */
@@ -248,6 +250,32 @@ body {
 .help-row { background: var(--cranberry-wash); border-radius: 10px; border: 1px solid rgba(212, 19, 103, 0.12); padding: 10px 12px; display: flex; align-items: flex-start; gap: 8px; }
 .help-icon { color: var(--cranberry); margin-top: 1px; flex-shrink: 0; }
 .help-text { font-size: 12px; color: var(--ink-700); line-height: 1.5; font-weight: 500; }
+
+/* PROJECT TASKS (Monday-style) */
+.task-list { display: flex; flex-direction: column; gap: 8px; }
+.task-row { background: var(--ink-25); border-radius: 10px; border: 1px solid var(--ink-100); padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+.task-info { flex: 1; min-width: 0; }
+.task-title-row { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+.task-title { font-size: 13px; font-weight: 700; color: var(--ink-1000); line-height: 1.25; }
+.task-info-icon { color: var(--cranberry); flex-shrink: 0; }
+.task-desc { margin-top: 6px; font-size: 12px; color: var(--ink-700); line-height: 1.5; }
+.task-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 10px; }
+.task-meta span { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--ink-500); }
+.task-status-pill { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; flex-shrink: 0; white-space: nowrap; }
+.status-pendiente { background: var(--ink-50); color: var(--ink-600); border: 1px solid var(--ink-200); }
+.status-progreso { background: var(--blue-tint); color: var(--blue); border: 1px solid var(--blue-border); }
+.status-completada { background: #e8f6ec; color: #1a7f4b; border: 1px solid #bfe6cc; }
+
+/* GLOBAL TASKS TIMELINE (Proyectos → Tareas) */
+.task-bar-pendiente { background: var(--ink-400); }
+.task-bar-progreso { background: var(--blue); }
+.task-bar-completada { background: #1a7f4b; }
+
+/* Completed tasks: dimmed + struck through (detail rows and timeline cards) */
+.task-done { opacity: 0.65; }
+.task-done .task-title,
+.task-done .event-title { color: var(--ink-400); text-decoration: line-through; }
+.tl-project { display: flex; align-items: center; gap: 3px; font-size: 9px; font-weight: 800; color: var(--cranberry); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px; }
 
 /* ACTAS */
 .actas-section { padding: 14px 16px; }

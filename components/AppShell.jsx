@@ -13,7 +13,7 @@ import ActaDetail from '@/components/ActaDetail';
 import NosotrosDetail from '@/components/NosotrosDetail';
 import Lightbox from '@/components/Lightbox';
 
-export default function AppShell({ eventos, proyectos, avisos, actas, nosotros, socios }) {
+export default function AppShell({ eventos, proyectos, avisos, actas, nosotros, socios, tareas }) {
   const [activeTab, setActiveTab] = useState('inicio');
   const [openProject, setOpenProject] = useState(null);
   const [openEvent, setOpenEvent] = useState(null);
@@ -51,7 +51,7 @@ export default function AppShell({ eventos, proyectos, avisos, actas, nosotros, 
         <Agenda eventos={eventos} onOpenEvent={setOpenEvent} />
       )}
       {activeTab === 'proyectos' && (
-        <Proyectos proyectos={proyectos} onOpenProject={setOpenProject} />
+        <Proyectos proyectos={proyectos} tareas={tareas} onOpenProject={setOpenProject} />
       )}
       {activeTab === 'actas' && (
         <Actas actas={actas} onOpenActa={setOpenActa} />
